@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout — Grant Writer Pack</title>
+  <style>
+    :root { --accent:#0a4d2e; --ink:#1a1a1a; --muted:#555; --line:#e5e5e5; --bg:#fafaf7; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:17px/1.5 ui-serif,Georgia,serif; background:var(--bg); color:var(--ink); padding:0 1rem; }
+    main { max-width:520px; margin:3rem auto 5rem; }
+    h1 { font-size:1.7rem; margin:0 0 0.3rem; }
+    .sub { color:var(--muted); margin:0 0 2rem; font-size:1rem; }
+    .plan { border:1px solid var(--line); border-radius:6px; padding:1rem 1.2rem; margin:0.7rem 0; cursor:pointer; background:#fff; display:flex; align-items:center; gap:1rem; }
+    .plan:hover { border-color:var(--accent); }
+    .plan.selected { border-color:var(--accent); border-width:2px; }
+    .plan input[type=radio] { accent-color:var(--accent); width:18px; height:18px; flex-shrink:0; }
+    .plan-label { flex:1; }
+    .plan-name { font-weight:600; }
+    .plan-desc { color:var(--muted); font-size:0.92rem; }
+    .plan-price { font-weight:600; color:var(--accent); white-space:nowrap; }
+    label[for=email] { display:block; margin:1.5rem 0 0.3rem; font-size:0.95rem; font-weight:500; }
+    input[type=email] { width:100%; padding:0.6rem 0.8rem; font-size:1rem; border:1px solid var(--line); border-radius:4px; font-family:inherit; }
+    input[type=email]:focus { outline:2px solid var(--accent); border-color:transparent; }
+    #card-element { border:1px solid var(--line); border-radius:4px; padding:0.75rem; background:#fff; margin-top:1rem; }
+    #card-errors { color:#c0392b; font-size:0.9rem; margin-top:0.4rem; min-height:1.2rem; }
+    button#pay { margin-top:1.2rem; width:100%; padding:0.85rem; font-size:1rem; font-family:inherit; background:var(--accent); color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:500; }
+    button#pay:hover { background:#073a22; }
+    button#pay:disabled { opacity:0.6; cursor:default; }
+    .guarantee { font-size:0.88rem; color:var(--muted); margin-top:1rem; text-align:center; }
+    .spinner { display:none; }
+    .secure { text-align:center; color:var(--muted); font-size:0.85rem; margin-top:0.5rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Grant Writer Pack</h1>
+  <p class="sub">Cancel anytime. Instant access. License key emailed immediately.</p>
+
+  <form id="payment-form">
+    <div class="plan selected" onclick="selectPlan('early_bird',this)">
+      <input type="radio" name="plan" value="early_bird" checked>
+      <div class="plan-label">
+        <div class="plan-name">Early Bird Solo — limited to 25 seats</div>
+        <div class="plan-desc">1 seat · All 3 commands · $79/mo locked for life</div>
+      </div>
+      <div class="plan-price">$79/mo</div>
+    </div>
+    <div class="plan" onclick="selectPlan('solo',this)">
+      <input type="radio" name="plan" value="solo">
+      <div class="plan-label">
+        <div class="plan-name">Solo</div>
+        <div class="plan-desc">1 seat · All 3 commands</div>
+      </div>
+      <div class="plan-price">$149/mo</div>
+    </div>
+    <div class="plan" onclick="selectPlan('firm',this)">
+      <input type="radio" name="plan" value="firm">
+      <div class="plan-label">
+        <div class="plan-name">Firm</div>
+        <div class="plan-desc">3 seats · Shared boilerplate vault · Priority support</div>
+      </div>
+      <div class="plan-price">$349/mo</div>
+    </div>
+
+    <label for="email">Your email</label>
+    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+    <div id="card-element"></div>
+    <div id="card-errors" role="alert"></div>
+
+    <button id="pay" type="submit">Subscribe</button>
+    <p class="secure">Secured by Stripe · No card data touches our server</p>
+    <p class="guarantee">30-day money-back guarantee. If the scanner doesn't surface at least one opportunity you hadn't already found, full refund — no questions.</p>
+  </form>
+</main>
+
+<!--
+  STRIPE SETUP — 5 steps, ~15 minutes:
+
+  1. Sign up at https://stripe.com (free, takes ~5 min)
+
+  2. In your Stripe dashboard, create three Products:
+       "Grant Writer Pack — Early Bird"  $79/mo recurring
+       "Grant Writer Pack — Solo"         $149/mo recurring
+       "Grant Writer Pack — Firm"         $349/mo recurring
+
+  3. In Stripe → Developers → API keys, copy your PUBLISHABLE key
+     (starts with pk_live_ or pk_test_ for testing)
+
+  4. Replace YOUR_STRIPE_PUBLISHABLE_KEY below with that key.
+
+  5. For the webhook (so you get notified when someone pays):
+     - Stripe dashboard → Developers → Webhooks → Add endpoint
+     - URL: https://YOUR_DOMAIN/webhook  (or use Stripe CLI to test locally)
+     - Events: checkout.session.completed, customer.subscription.deleted
+     - When checkout.session.completed fires, run:
+         python3 scripts/provision.py --email EMAIL --plan PLAN --stripe-id SESSION_ID
+     - Simple webhook handler is in scripts/webhook.py
+
+  For the simplest possible setup (no webhook code):
+  Just use Stripe Payment Links — create them in the dashboard,
+  paste the URLs into the onclick handlers below, skip the JS checkout entirely.
+-->
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe('pk_test_51TROCnFvgD4ayIBoqyfICc7TPLRwLQqhZAKVhTKuYaGHI2ffuuSy7rngBvnmLpJp1QZPd5HLU8vZZeivxYghtDcc003F5Fkiit');
+  const elements = stripe.elements();
+  const card = elements.create('card', {
+    style: {
+      base: { fontSize: '16px', color: '#1a1a1a', fontFamily: 'ui-serif, Georgia, serif', '::placeholder': { color: '#aaa' } }
+    }
+  });
+  card.mount('#card-element');
+  card.on('change', e => {
+    document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
+  });
+
+  const PRICE_IDS = {
+    early_bird: 'price_1TROHmFvgD4ayIBoD9KTAYdn',
+    solo:       'price_1TROIJFvgD4ayIBoKc2G6yIC',
+    firm:       'price_1TROJEFvgD4ayIBorHs0KCud',
+  };
+
+  function selectPlan(val, el) {
+    document.querySelectorAll('.plan').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input[type=radio]').checked = true;
+  }
+
+  document.getElementById('payment-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('pay');
+    btn.disabled = true; btn.textContent = 'Processing...';
+    const plan = document.querySelector('input[name=plan]:checked').value;
+    const email = document.getElementById('email').value;
+
+    // Create a Stripe Checkout session on the server.
+    // If you're doing this without a server, replace this with a Stripe Payment Link:
+    //   window.location = 'https://buy.stripe.com/YOUR_LINK';
+    const res = await fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan, email, priceId: PRICE_IDS[plan] }),
+    }).catch(() => null);
+
+    if (!res || !res.ok) {
+      document.getElementById('card-errors').textContent =
+        'Could not start checkout. Email hello@grantwriterpack.com to purchase manually.';
+      btn.disabled = false; btn.textContent = 'Subscribe';
+      return;
+    }
+
+    const { sessionId } = await res.json();
+    stripe.redirectToCheckout({ sessionId });
+  });
+</script>
+</body>
+</html>
