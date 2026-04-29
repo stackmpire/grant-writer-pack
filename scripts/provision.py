@@ -15,21 +15,19 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import os
-import smtplib
-import sys
-from email.mime.text import MIMEText
+import urllib.request
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from license import generate
 
 REPO_URL = os.environ.get("REPO_URL", "https://github.com/stackmpire/grant-writer-pack")
 LANDING_URL = os.environ.get("LANDING_URL", "https://grantwriterpack.com")
 SENDER_NAME = os.environ.get("SENDER_NAME", "Grant Writer Pack")
-SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
-SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
-SMTP_USER = os.environ.get("SMTP_USER", "")
-SMTP_PASS = os.environ.get("SMTP_PASS", "")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "re_3fxpg1Ha_JBktwEzUct3juyngShzyLj4x")
+FROM_EMAIL = os.environ.get("FROM_EMAIL", "onboarding@resend.dev")
 
 PRICES = {"solo": "$149/mo", "firm": "$349/mo", "early_bird": "$79/mo (locked for life)"}
 SEATS = {"solo": "1 seat", "firm": "3 seats", "early_bird": "1 seat"}
@@ -105,22 +103,30 @@ To cancel: reply "cancel" and I'll stop the subscription. No forms.
 """
 
 
-def send(to_email: str, subject: str, body: str) -> None:
-    if not SMTP_USER:
+def send(to_email: str, subject: str, body: str, dry_run: bool = False) -> None:
+    if dry_run:
         print(f"[dry-run] Would send to {to_email}")
         print(f"Subject: {subject}")
         print(body)
         return
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = f"{SENDER_NAME} <{SMTP_USER}>"
-    msg["To"] = to_email
-    msg.attach(MIMEText(body, "plain"))
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as s:
-        s.starttls()
-        s.login(SMTP_USER, SMTP_PASS)
-        s.sendmail(SMTP_USER, to_email, msg.as_string())
-    print(f"Email sent to {to_email}")
+    payload = json.dumps({
+        "from": f"{SENDER_NAME} <{FROM_EMAIL}>",
+        "to": [to_email],
+        "subject": subject,
+        "text": body,
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
+        },
+    )
+    with urllib.request.urlopen(req) as resp:
+        result = json.loads(resp.read())
+    print(f"Email sent to {to_email} (id: {result.get('id')})")
 
 
 def main() -> int:
@@ -131,15 +137,11 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true", help="Print email without sending")
     args = ap.parse_args()
 
-    if args.dry_run:
-        global SMTP_USER
-        SMTP_USER = ""
-
     key = generate(args.email, args.plan, getattr(args, "stripe_id", None))
     print(f"License key: {key}")
 
     body = welcome_email(args.email, key, args.plan)
-    send(args.email, f"Your Grant Writer Pack license key — {key}", body)
+    send(args.email, f"Your Grant Writer Pack license key — {key}", body, dry_run=args.dry_run)
     return 0
 
 

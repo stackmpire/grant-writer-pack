@@ -105,7 +105,7 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-  const stripe = Stripe('YOUR_STRIPE_PUBLISHABLE_KEY');
+  const stripe = Stripe('pk_test_51TROCnFvgD4ayIBoqyfICc7TPLRwLQqhZAKVhTKuYaGHI2ffuuSy7rngBvnmLpJp1QZPd5HLU8vZZeivxYghtDcc003F5Fkiit');
   const elements = stripe.elements();
   const card = elements.create('card', {
     style: {
@@ -118,9 +118,9 @@
   });
 
   const PRICE_IDS = {
-    early_bird: 'price_REPLACE_EARLY_BIRD_PRICE_ID',
-    solo:       'price_REPLACE_SOLO_PRICE_ID',
-    firm:       'price_REPLACE_FIRM_PRICE_ID',
+    early_bird: 'price_1TROHmFvgD4ayIBoD9KTAYdn',
+    solo:       'price_1TROIJFvgD4ayIBoKc2G6yIC',
+    firm:       'price_1TROJEFvgD4ayIBorHs0KCud',
   };
 
   function selectPlan(val, el) {
