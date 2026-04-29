@@ -52,7 +52,7 @@ rank.py         → data/ranked.json    (score: keyword title match +3, desc mat
 - [ ] Set STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET
 - [ ] Replace placeholders in marketing/checkout.html (publishable key, price IDs)
 - [ ] Replace YOUR_EMAIL@example.com in marketing/landing.html
-- [ ] Replace YOUR_USERNAME in install.sh
+- [ ] Replace stackmpire in install.sh
 
 ## When someone buys (manual flow until webhook is deployed)
 

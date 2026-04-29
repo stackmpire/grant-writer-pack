@@ -2,15 +2,15 @@
 # Grant Writer Pack — one-line customer installer
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/grant-writer-pack/main/install.sh | bash
+#   curl -sSL https://raw.githubusercontent.com/stackmpire/grant-writer-pack/main/install.sh | bash
 #
 # Or clone manually:
-#   git clone https://github.com/YOUR_USERNAME/grant-writer-pack.git
+#   git clone https://github.com/stackmpire/grant-writer-pack.git
 #   cd grant-writer-pack && bash install.sh
 
 set -e
 
-REPO="https://github.com/YOUR_USERNAME/grant-writer-pack.git"
+REPO="https://github.com/stackmpire/grant-writer-pack.git"
 INSTALL_DIR="$HOME/grant-writer-pack"
 BLUE="\033[0;34m"; GREEN="\033[0;32m"; RESET="\033[0m"; RED="\033[0;31m"
 

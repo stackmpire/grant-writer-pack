@@ -23,7 +23,7 @@ from email.mime.multipart import MIMEMultipart
 
 from license import generate
 
-REPO_URL = os.environ.get("REPO_URL", "https://github.com/YOUR_USERNAME/grant-writer-pack")
+REPO_URL = os.environ.get("REPO_URL", "https://github.com/stackmpire/grant-writer-pack")
 LANDING_URL = os.environ.get("LANDING_URL", "https://grantwriterpack.com")
 SENDER_NAME = os.environ.get("SENDER_NAME", "Grant Writer Pack")
 SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
