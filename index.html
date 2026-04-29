@@ -35,7 +35,7 @@
     .nav-links a:hover { color: var(--ink); }
     .nav-cta { background: var(--green); color: #fff !important; padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.88rem !important; font-weight: 600; transition: background .15s !important; }
     .nav-cta:hover { background: #073a22 !important; color: #fff !important; }
-    @media (max-width: 600px) { .nav-links { gap: 1rem; } .nav-links a:not(.nav-cta) { display: none; } }
+    @media (max-width: 640px) { .nav-links { gap: 1rem; } .nav-links a:not(.nav-cta):not(.nav-github) { display: none; } }
 
     /* HERO */
     .hero { background: linear-gradient(160deg, #f0faf4 0%, #fff 60%); border-bottom: 1px solid var(--line); padding: 5rem 1.5rem 4rem; }
@@ -177,7 +177,8 @@
       <a href="#compare">vs Instrumentl</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
-      <a href="https://github.com/stackmpire/grant-writer-pack">GitHub</a>
+      <a href="#about">About</a>
+      <a href="https://github.com/stackmpire/grant-writer-pack" class="nav-github">GitHub</a>
       <a href="checkout.html" class="nav-cta">Get Early Access →</a>
     </div>
   </div>
@@ -453,6 +454,40 @@
   </div>
 </section>
 
+<!-- ABOUT -->
+<section id="about" style="background:var(--bg); padding:5rem 1.5rem; border-top:1px solid var(--line);">
+  <div style="max-width:700px;margin:0 auto;">
+    <div class="section-label">About</div>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Made by a grant writer, for grant writers</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;">
+      <div>
+        <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:1rem;">I spent years writing federal grants — watching grants.gov refresh, copying award amounts into spreadsheets, and accidentally reusing the same paragraph for two HHS funders in the same quarter. It's embarrassing and avoidable.</p>
+        <p style="font-size:1rem;color:#374151;line-height:1.75;margin-bottom:1rem;">Grant Writer Pack started as a personal tool. I automated the scan, built a ranker that actually understood my niche, and wired up a boilerplate log so I'd never duplicate again. Then I packaged it as a Claude Code plugin so it runs entirely on your machine — your proposals never leave.</p>
+        <p style="font-size:1rem;color:#374151;line-height:1.75;">This is a solo product. When you email me, I reply. When something breaks, I fix it.</p>
+        <p style="margin-top:1.5rem;"><a href="mailto:fawazmpire@gmail.com" style="color:var(--green);font-weight:600;text-decoration:none;">fawazmpire@gmail.com</a></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.2rem;">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green);letter-spacing:-0.02em;">$0</div>
+          <div style="font-size:0.88rem;color:var(--muted);margin-top:0.1rem;">VC funding. Bootstrapped.</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.2rem;">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green);letter-spacing:-0.02em;">~300 lines</div>
+          <div style="font-size:0.88rem;color:var(--muted);margin-top:0.1rem;">of Python. No bloat. Fully hackable.</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.2rem;">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green);letter-spacing:-0.02em;">MIT</div>
+          <div style="font-size:0.88rem;color:var(--muted);margin-top:0.1rem;">Licensed. Fork it, modify it, run it free.</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.2rem;">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green);letter-spacing:-0.02em;">&lt; 24 hrs</div>
+          <div style="font-size:0.88rem;color:var(--muted);margin-top:0.1rem;">Support response time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FINAL CTA -->
 <section style="background:var(--green); text-align:center; padding:4rem 1.5rem;">
   <h2 style="color:#fff;font-size:2rem;letter-spacing:-0.02em;margin-bottom:0.8rem;">Ready to stop scrolling?</h2>
@@ -465,16 +500,27 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
+  <div class="footer-inner" style="flex-direction:column;gap:1.5rem;text-align:center;">
     <div>
       <div class="footer-logo">GrantWriterPack</div>
-      <div style="margin-top:.4rem">Made for grant writers, by a grant writer.</div>
+      <div style="margin-top:.3rem;font-size:0.85rem;">The daily grant scanner built for solo writers. Federal-first. Privacy-first.</div>
     </div>
-    <div class="footer-links">
+    <div class="footer-links" style="flex-wrap:wrap;justify-content:center;gap:1rem 2rem;">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#about">About</a>
       <a href="https://github.com/stackmpire/grant-writer-pack">GitHub</a>
-      <a href="checkout.html">Pricing</a>
-      <a href="mailto:fawazmpire@gmail.com">Contact</a>
+      <a href="checkout.html">Buy</a>
+      <a href="success.html">Post-purchase</a>
     </div>
+    <div class="footer-links" style="flex-wrap:wrap;justify-content:center;gap:0.5rem 1.5rem;font-size:0.82rem;">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="terms.html#refund">Refund Policy</a>
+      <a href="mailto:fawazmpire@gmail.com">Contact: fawazmpire@gmail.com</a>
+    </div>
+    <div style="font-size:0.8rem;color:#6b7280;">© 2025 Grant Writer Pack. All rights reserved. Payments processed by Stripe — your card data never touches our server.</div>
   </div>
 </footer>
 

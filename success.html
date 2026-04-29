@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Purchase Confirmed — Grant Writer Pack</title>
+  <style>
+    :root {
+      --green: #0a4d2e;
+      --green-light: #e8f5ee;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --bg: #f9fafb;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
+
+    /* NAV */
+    nav { background: #fff; border-bottom: 1px solid var(--line); }
+    .nav-inner { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; height: 56px; gap: 1rem; }
+    .nav-logo { font-weight: 700; font-size: 1rem; color: var(--green); text-decoration: none; }
+    .nav-back { margin-left: auto; font-size: 0.88rem; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.3rem; }
+    .nav-back:hover { color: var(--ink); }
+
+    /* MAIN */
+    main { max-width: 620px; margin: 4rem auto 6rem; padding: 0 1.5rem; }
+
+    /* CHECK CIRCLE */
+    .check-wrap { text-align: center; margin-bottom: 2rem; }
+    .check-circle { width: 72px; height: 72px; border-radius: 50%; background: var(--green-light); border: 3px solid var(--green); display: inline-flex; align-items: center; justify-content: center; }
+    .check-circle svg { width: 36px; height: 36px; stroke: var(--green); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    h1 { font-size: 1.9rem; letter-spacing: -0.02em; margin-bottom: 0.5rem; text-align: center; }
+    .sub { color: var(--muted); text-align: center; font-size: 1rem; margin-bottom: 2.5rem; }
+
+    /* EMAIL CALLOUT */
+    .email-box { background: var(--green-light); border: 1.5px solid #b7dfc8; border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: flex-start; }
+    .email-box-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .email-box h3 { font-size: 1rem; margin-bottom: 0.25rem; color: var(--green); }
+    .email-box p { font-size: 0.92rem; color: #1a4731; margin: 0; }
+
+    /* STEPS */
+    h2 { font-size: 1.1rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -0.01em; }
+    ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    ol li { display: flex; gap: 1rem; align-items: flex-start; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--green); color: #fff; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem; }
+    .step-body { flex: 1; }
+    .step-body strong { display: block; font-size: 0.97rem; margin-bottom: 0.25rem; }
+    .step-body p { font-size: 0.9rem; color: var(--muted); margin: 0; }
+    code, pre { font-family: ui-monospace, "Cascadia Code", Menlo, monospace; }
+    pre { background: #1a1a2e; color: #f8f8f2; padding: 0.8rem 1rem; border-radius: 6px; font-size: 0.82rem; overflow-x: auto; margin-top: 0.5rem; line-height: 1.6; }
+    .pre-comment { color: #6272a4; }
+    .pre-cmd { color: #50fa7b; }
+
+    /* WHAT NEXT */
+    .next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .next-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.1rem; }
+    .next-card .icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+    .next-card strong { font-size: 0.93rem; display: block; margin-bottom: 0.2rem; }
+    .next-card p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+    /* SUPPORT */
+    .support { margin-top: 2.5rem; padding: 1.2rem 1.4rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .support p { font-size: 0.9rem; color: var(--muted); margin: 0; }
+    .support a { color: var(--green); font-weight: 600; text-decoration: none; }
+    .support a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--line); padding: 2rem 1.5rem; text-align: center; }
+    footer p { font-size: 0.82rem; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; margin: 0 0.5rem; }
+    footer a:hover { color: var(--ink); }
+
+    @media (max-width: 540px) {
+      h1 { font-size: 1.5rem; }
+      .next-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">GrantWriterPack</a>
+    <a class="nav-back" href="index.html">← Back to home</a>
+  </div>
+</nav>
+
+<main>
+
+  <div class="check-wrap">
+    <div class="check-circle">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+  </div>
+
+  <h1>You're in. 🎉</h1>
+  <p class="sub">Your subscription is confirmed. Your license key is on its way to your inbox right now.</p>
+
+  <div class="email-box">
+    <div class="email-box-icon">📬</div>
+    <div>
+      <h3>Check your email — arrives in under 5 minutes</h3>
+      <p>Your welcome email contains your license key and step-by-step install instructions. Check your spam folder if you don't see it. Can't find it? Email <a href="mailto:fawazmpire@gmail.com" style="color:var(--green);font-weight:600;">fawazmpire@gmail.com</a> with your order and we'll resend immediately.</p>
+    </div>
+  </div>
+
+  <h2>How it works (no account needed)</h2>
+  <p style="font-size:0.92rem;color:var(--muted);margin-bottom:1.2rem;">Grant Writer Pack is a <strong>local Claude Code plugin</strong> — there's no dashboard to log into. Your license key is your access credential. It lives in one config file on your machine. Here's the 3-step setup:</p>
+
+  <ol>
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Clone the repo &amp; copy your profile</strong>
+        <p>Open Terminal and run:</p>
+        <pre><span class="pre-comment"># Clone (or pull if you already have it)</span>
+<span class="pre-cmd">git clone https://github.com/stackmpire/grant-writer-pack.git</span>
+<span class="pre-cmd">cd grant-writer-pack</span>
+<span class="pre-comment"># Copy the example profile</span>
+<span class="pre-cmd">cp config/profile.example.json config/profile.json</span></pre>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Paste your license key into profile.json</strong>
+        <p>Open <code>config/profile.json</code> in any text editor and add your key (from the email) to the <code>"license_key"</code> field. Also fill in your keywords and preferred agencies — this is what the ranker uses to score opportunities for <em>your</em> niche.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Open in Claude Code and scan</strong>
+        <pre><span class="pre-comment"># Open the folder in Claude Code</span>
+<span class="pre-cmd">claude .</span>
+<span class="pre-comment"># Then type in the Claude Code chat:</span>
+<span class="pre-cmd">/grants-scan</span></pre>
+        <p>Your first ranked shortlist arrives in about 30 seconds.</p>
+      </div>
+    </li>
+  </ol>
+
+  <h2>Three things to do in your first 10 minutes</h2>
+  <div class="next-grid">
+    <div class="next-card">
+      <div class="icon">🎯</div>
+      <strong>Tune your profile</strong>
+      <p>Add your keywords, preferred agencies and ALN numbers to <code>profile.json</code>. Re-run <code>/grants-scan</code> — results sharpen immediately.</p>
+    </div>
+    <div class="next-card">
+      <div class="icon">📂</div>
+      <strong>Add past proposals</strong>
+      <p>Drop 2–3 past proposals as <code>.txt</code> or <code>.md</code> into the <code>boilerplate/</code> folder. <code>/grants-boilerplate</code> needs something to pull from.</p>
+    </div>
+    <div class="next-card">
+      <div class="icon">📄</div>
+      <strong>Try /grants-draft</strong>
+      <p>Paste the URL of any open RFP you're looking at. Get a full Markdown skeleton with sections, word limits, and the evaluation rubric in under a minute.</p>
+    </div>
+    <div class="next-card">
+      <div class="icon">⏰</div>
+      <strong>Set up the daily scan</strong>
+      <p>Follow the LaunchAgent setup in the README to get your ranked shortlist waiting in <code>data/ranked.json</code> every morning at 7 AM — automatically.</p>
+    </div>
+  </div>
+
+  <div class="support">
+    <p>Questions or something's not working? Reply directly to your welcome email or reach out at <a href="mailto:fawazmpire@gmail.com">fawazmpire@gmail.com</a>. I read and respond to every message, usually within a few hours.</p>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    <a href="index.html">Home</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="mailto:fawazmpire@gmail.com">Contact</a>
+  </p>
+  <p style="margin-top:0.5rem;">© 2025 Grant Writer Pack. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
