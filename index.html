@@ -3,176 +3,480 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Grant Writer Pack — daily grants.gov scan, ranked for your niche</title>
-  <meta name="description" content="A Claude Code plugin for solo grant writers. Daily grants.gov eligibility scan ranked to your niche, RFP-to-skeleton drafting, and a boilerplate vault that tracks reuse across funders.">
+  <title>Grant Writer Pack — Daily grants.gov scanner for solo grant writers</title>
+  <meta name="description" content="Stop scrolling grants.gov. Get a ranked shortlist of federal opportunities every morning, filtered to your niche, with award sizes and deadlines already done. $79/mo.">
   <style>
     :root {
-      --ink: #1a1a1a;
-      --muted: #555;
-      --line: #e5e5e5;
-      --accent: #0a4d2e;
-      --bg: #fafaf7;
-      --card: #fff;
+      --green: #0a4d2e;
+      --green-light: #e8f5ee;
+      --green-mid: #1a7a4a;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --bg: #f9fafb;
+      --white: #ffffff;
+      --yellow: #fef3c7;
+      --yellow-border: #f59e0b;
+      --red: #fee2e2;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
     }
-    * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
-    body {
-      margin: 0;
-      font: 17px/1.55 ui-serif, Georgia, "Times New Roman", serif;
-      color: var(--ink);
-      background: var(--bg);
-      padding: 0 1.2rem;
-    }
-    main {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 4rem 0 6rem;
-    }
-    h1 {
-      font-size: 2.3rem;
-      line-height: 1.15;
-      margin: 0 0 0.4rem;
-      letter-spacing: -0.01em;
-    }
-    h2 {
-      font-size: 1.3rem;
-      margin: 2.6rem 0 0.6rem;
-      letter-spacing: -0.005em;
-    }
-    .lede {
-      font-size: 1.15rem;
-      color: var(--muted);
-      margin: 0 0 2rem;
-    }
-    p, li { color: var(--ink); }
-    ul { padding-left: 1.2rem; }
-    li { margin: 0.3rem 0; }
-    code, pre {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.92em;
-    }
-    pre {
-      background: #f0efe8;
-      padding: 0.9rem 1rem;
-      border-radius: 4px;
-      overflow-x: auto;
-      border: 1px solid var(--line);
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 1.1rem 1.3rem;
-      margin: 1rem 0;
-    }
-    .card h3 {
-      margin: 0 0 0.4rem;
-      font-size: 1.05rem;
-    }
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.97rem;
-    }
-    .pricing {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .price {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 1.1rem 1.2rem;
-      background: var(--card);
-    }
-    .price .amount {
-      font-size: 1.7rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin: 0.2rem 0 0.1rem;
-    }
-    .price .per {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    .cta {
-      display: inline-block;
-      margin: 1.6rem 0 0;
-      padding: 0.7rem 1.2rem;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-      font-weight: 500;
-    }
-    .cta:hover { background: #073a22; }
-    .small { font-size: 0.92em; color: var(--muted); }
-    .strike { text-decoration: line-through; color: #999; }
-    hr { border: 0; border-top: 1px solid var(--line); margin: 2.4rem 0; }
-    @media (max-width: 540px) {
-      .pricing { grid-template-columns: 1fr; }
-      h1 { font-size: 1.9rem; }
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--white); }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-logo { font-weight: 700; font-size: 1.05rem; color: var(--green); text-decoration: none; letter-spacing: -0.01em; }
+    .nav-logo span { color: var(--ink); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color .15s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta { background: var(--green); color: #fff !important; padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.88rem !important; font-weight: 600; transition: background .15s !important; }
+    .nav-cta:hover { background: #073a22 !important; color: #fff !important; }
+    @media (max-width: 600px) { .nav-links { gap: 1rem; } .nav-links a:not(.nav-cta) { display: none; } }
+
+    /* HERO */
+    .hero { background: linear-gradient(160deg, #f0faf4 0%, #fff 60%); border-bottom: 1px solid var(--line); padding: 5rem 1.5rem 4rem; }
+    .hero-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--green-light); color: var(--green); font-size: 0.8rem; font-weight: 600; padding: 0.3rem 0.75rem; border-radius: 20px; margin-bottom: 1.2rem; border: 1px solid #b7dfc8; }
+    .hero-badge::before { content: "●"; font-size: 0.6rem; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .hero h1 { font-size: 2.6rem; line-height: 1.15; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 1rem; }
+    .hero h1 em { font-style: normal; color: var(--green); }
+    .hero-sub { font-size: 1.05rem; color: var(--muted); line-height: 1.65; margin-bottom: 2rem; }
+    .hero-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+    .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--green); color: #fff; text-decoration: none; padding: 0.85rem 1.6rem; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: background .15s, transform .1s; }
+    .btn-primary:hover { background: #073a22; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--white); color: var(--ink); text-decoration: none; padding: 0.85rem 1.6rem; border-radius: 8px; font-weight: 500; font-size: 0.95rem; border: 1px solid var(--line); transition: border-color .15s; }
+    .btn-secondary:hover { border-color: #9ca3af; }
+    .hero-guarantee { font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem; }
+    .hero-guarantee strong { color: var(--ink); }
+
+    /* TERMINAL DEMO */
+    .terminal { background: #1a1a2e; border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+    .term-bar { background: #2d2d3f; padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.4rem; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c940; }
+    .term-title { font-size: 0.75rem; color: #888; margin-left: auto; margin-right: auto; font-family: monospace; }
+    .term-body { padding: 1.2rem; font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 0.78rem; line-height: 1.7; }
+    .term-prompt { color: #50fa7b; }
+    .term-cmd { color: #f8f8f2; }
+    .term-head { color: #8be9fd; font-weight: bold; margin-top: 0.5rem; display: block; }
+    .term-row { color: #f8f8f2; display: flex; gap: 0.5rem; }
+    .term-score { color: #ffb86c; min-width: 28px; }
+    .term-title-col { color: #f8f8f2; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .term-agency { color: #bd93f9; min-width: 55px; }
+    .term-why { color: #6272a4; font-size: 0.72rem; }
+    .term-summary { color: #50fa7b; margin-top: 0.6rem; display: block; font-size: 0.75rem; }
+    @media (max-width: 768px) { .hero-inner { grid-template-columns: 1fr; } .hero { padding: 3rem 1.2rem; } .hero h1 { font-size: 2rem; } }
+
+    /* STATS */
+    .stats { background: var(--green); color: #fff; padding: 2.5rem 1.5rem; }
+    .stats-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center; }
+    .stat-num { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; }
+    .stat-label { font-size: 0.88rem; opacity: 0.8; margin-top: 0.2rem; }
+    @media (max-width: 600px) { .stats-inner { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+    /* SECTIONS */
+    section { padding: 5rem 1.5rem; }
+    section:nth-child(even) { background: var(--bg); }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+    .section-label { font-size: 0.8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green); margin-bottom: 0.6rem; }
+    .section-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.8rem; }
+    .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 560px; }
+
+    /* FEATURES */
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    .feature { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; transition: box-shadow .2s; }
+    .feature:hover { box-shadow: var(--shadow); }
+    .feature-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+    .feature-name { font-weight: 700; margin-bottom: 0.4rem; font-size: 1rem; }
+    .feature-cmd { font-family: monospace; font-size: 0.8rem; background: var(--green-light); color: var(--green); padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 0.6rem; }
+    .feature p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; }
+    @media (max-width: 768px) { .features { grid-template-columns: 1fr; } }
+
+    /* WORKFLOW */
+    .workflow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 2.5rem; position: relative; }
+    .workflow::before { content: ""; position: absolute; top: 28px; left: 16.6%; right: 16.6%; height: 2px; background: linear-gradient(90deg, var(--green), var(--green-mid)); z-index: 0; }
+    .workflow-step { text-align: center; padding: 0 1rem; position: relative; z-index: 1; }
+    .step-num { width: 56px; height: 56px; border-radius: 50%; background: var(--green); color: #fff; font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--white); box-shadow: 0 0 0 2px var(--green); }
+    .step-title { font-weight: 700; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 0.88rem; color: var(--muted); }
+    .step-cmd { font-family: monospace; font-size: 0.82rem; background: var(--ink); color: #50fa7b; padding: 0.3rem 0.7rem; border-radius: 5px; display: inline-block; margin-top: 0.5rem; }
+    @media (max-width: 600px) { .workflow { grid-template-columns: 1fr; } .workflow::before { display: none; } }
+
+    /* COMPARISON */
+    .compare-table { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: 0.9rem; }
+    .compare-table th { padding: 0.8rem 1rem; text-align: left; border-bottom: 2px solid var(--line); }
+    .compare-table th:not(:first-child) { text-align: center; }
+    .compare-table td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
+    .compare-table td:not(:first-child) { text-align: center; }
+    .compare-table tr:hover td { background: var(--bg); }
+    .col-us { background: var(--green-light) !important; font-weight: 600; }
+    .col-us-head { background: var(--green); color: #fff; border-radius: 6px 6px 0 0; }
+    .check { color: var(--green); font-size: 1.1rem; }
+    .cross { color: #9ca3af; }
+    .partial { color: #f59e0b; }
+
+    /* PRICING */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    .price-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem; position: relative; transition: box-shadow .2s; }
+    .price-card:hover { box-shadow: var(--shadow); }
+    .price-card.featured { border: 2px solid var(--green); }
+    .featured-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--green); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 20px; white-space: nowrap; }
+    .price-name { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 0.5rem; }
+    .price-amount { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
+    .price-amount span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+    .price-was { font-size: 0.85rem; color: var(--muted); text-decoration: line-through; margin-bottom: 0.3rem; height: 1.2rem; }
+    .price-desc { font-size: 0.88rem; color: var(--muted); margin: 0.8rem 0 1.2rem; }
+    .price-features { list-style: none; margin-bottom: 1.5rem; }
+    .price-features li { font-size: 0.88rem; padding: 0.3rem 0; display: flex; gap: 0.5rem; align-items: flex-start; }
+    .price-features li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .btn-plan { display: block; text-align: center; padding: 0.75rem; border-radius: 7px; font-weight: 600; text-decoration: none; font-size: 0.9rem; transition: all .15s; }
+    .btn-plan-primary { background: var(--green); color: #fff; }
+    .btn-plan-primary:hover { background: #073a22; }
+    .btn-plan-secondary { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+    .btn-plan-secondary:hover { border-color: #9ca3af; }
+    @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+    /* FAQ */
+    .faq { max-width: 680px; margin: 2.5rem auto 0; }
+    details { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 0.6rem; overflow: hidden; }
+    details[open] { border-color: var(--green); }
+    summary { padding: 1rem 1.2rem; cursor: pointer; font-weight: 600; font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-size: 1.3rem; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
+    details[open] summary::after { transform: rotate(45deg); }
+    .faq-body { padding: 0 1.2rem 1rem; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+    /* FOOTER */
+    footer { background: var(--ink); color: #9ca3af; padding: 3rem 1.5rem; font-size: 0.88rem; }
+    .footer-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-weight: 700; color: #fff; font-size: 1rem; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: #9ca3af; text-decoration: none; transition: color .15s; }
+    .footer-links a:hover { color: #fff; }
+
+    /* URGENCY BANNER */
+    .urgency { background: var(--yellow); border: 1px solid var(--yellow-border); border-radius: 8px; padding: 0.8rem 1.2rem; font-size: 0.88rem; margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .urgency strong { color: #92400e; }
   </style>
 </head>
 <body>
-<main>
-  <h1>The grant scanner you wish you had on Monday morning.</h1>
-  <p class="lede">A Claude Code plugin for solo grant writers. Daily grants.gov scan, ranked to your niche, with the deadline math and award sizes already done. Plus an RFP-to-draft skeleton and a boilerplate vault that warns you before you reuse a paragraph for the same funder twice.</p>
 
-  <a class="cta" href="checkout.html">Get early access — $79/mo</a>
-  <p class="small">First 25 writers locked at $79/mo for life (regular $149/mo). Instant access. 30-day money-back guarantee.</p>
-  <p class="small" style="margin-top:0.3rem">Not ready to buy? <a href="https://github.com/stackmpire/grant-writer-pack">Install the scanner free</a> — no card required.</p>
-
-  <h2>What it does</h2>
-
-  <div class="card">
-    <h3>/grants-scan — your morning shortlist</h3>
-    <p>Pulls every <code>posted</code> and <code>forecasted</code> opportunity from grants.gov, scores each one against your keywords, preferred agencies, ALNs, and award-size window, then surfaces the top 15 with a one-line "why this fits" and the deadline math already done.</p>
-  </div>
-
-  <div class="card">
-    <h3>/grants-draft — RFP to skeleton in 30 seconds</h3>
-    <p>Point it at an RFP URL or PDF. Get back a Markdown outline with every required section as an H2, the funder's exact heading text, word/page limits pulled verbatim, the evaluation rubric, and the attachments checklist. You bring the substance.</p>
-  </div>
-
-  <div class="card">
-    <h3>/grants-boilerplate — past wins, not paste-jobs</h3>
-    <p>Drop your past proposals into a folder. Ask for "org capacity for HRSA" — get the three most relevant past versions, rewritten in the funder's tone. Every reuse is logged so you get a warning before sending the same paragraph to the same funder twice in 18 months.</p>
-  </div>
-
-  <h2>Why a Claude Code plugin instead of a SaaS</h2>
-  <ul>
-    <li><strong>Your past proposals never leave your machine.</strong> No SOC 2 questions from your nonprofit clients.</li>
-    <li><strong>No per-seat tax.</strong> Your team uses Claude Code already; this just sits on top.</li>
-    <li><strong>Hackable.</strong> Profile is one JSON file. Add a state portal, swap the ranker, or pipe results into your own CRM. The whole thing is ~300 lines of Python.</li>
-  </ul>
-
-  <h2>What it's not</h2>
-  <ul>
-    <li>Not Instrumentl. No private foundation data — grants.gov only in v1, with state portals and Candid integration on the roadmap.</li>
-    <li>Not a writer. The skeletons and rewrites are scaffolds; you bring the substance and the judgment. That's the whole point.</li>
-    <li>Not a CRM. It dumps results to a Notion database if you want; otherwise it's a Markdown shop.</li>
-  </ul>
-
-  <h2>Pricing</h2>
-  <div class="pricing">
-    <div class="price">
-      <div>Solo</div>
-      <div class="amount">$149<span class="per">/mo</span></div>
-      <div class="small">1 seat. All three commands. Unlimited scans. Cancel anytime.</div>
-    </div>
-    <div class="price">
-      <div>Firm</div>
-      <div class="amount">$349<span class="per">/mo</span></div>
-      <div class="small">3 seats. Shared boilerplate vault. Priority email support.</div>
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">Grant<span>Writer</span>Pack</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#compare">vs Instrumentl</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/stackmpire/grant-writer-pack">GitHub</a>
+      <a href="checkout.html" class="nav-cta">Get Early Access →</a>
     </div>
   </div>
-  <p class="small" style="margin-top:1rem;">Annual plans get 2 months free. <span class="strike">$149/mo</span> <strong>$79/mo for life</strong> for the first 25 customers.</p>
+</nav>
 
-  <hr>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">Early bird — 25 seats only</div>
+      <h1>Stop scrolling grants.gov.<br><em>Start winning grants.</em></h1>
+      <p class="hero-sub">A Claude Code plugin for solo grant writers. Get a ranked shortlist of federal opportunities every morning — filtered to your niche, with award sizes and deadlines already calculated.</p>
+      <div class="hero-actions">
+        <a href="checkout.html" class="btn-primary">Get early access — $79/mo →</a>
+        <a href="https://github.com/stackmpire/grant-writer-pack" class="btn-secondary">⬇ Install free (scanner only)</a>
+        <p class="hero-guarantee"><strong>30-day money-back guarantee.</strong> Cancel anytime. No questions.</p>
+        <div class="urgency">⚡ <strong>Early bird pricing:</strong> First 25 seats locked at $79/mo for life. Regular price $149/mo.</div>
+      </div>
+    </div>
+    <div>
+      <div class="terminal">
+        <div class="term-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <div class="term-title">grant-writer-pack — claude .</div>
+        </div>
+        <div class="term-body">
+          <span><span class="term-prompt">›</span> <span class="term-cmd">/grants-scan</span></span>
+          <span class="term-head">● Top 15 Ranked Opportunities</span>
+          <br>
+          <div class="term-row"><span class="term-score">[4.0]</span><span class="term-agency">HHS</span><span class="term-title-col">Youth Mental Health Workforce Dev...</span></div>
+          <div class="term-why">↳ keyword match · preferred agency · award $450K · 38d</div>
+          <br>
+          <div class="term-row"><span class="term-score">[3.0]</span><span class="term-agency">ED</span><span class="term-title-col">State Tribal Education Partnership...</span></div>
+          <div class="term-why">↳ preferred agency (ED) · 43d to deadline</div>
+          <br>
+          <div class="term-row"><span class="term-score">[3.0]</span><span class="term-agency">USDA</span><span class="term-title-col">Rural After-School Nutrition Program</span></div>
+          <div class="term-why">↳ keyword match · award $20K–$175K · 22d</div>
+          <br>
+          <div class="term-row"><span class="term-score">[2.0]</span><span class="term-agency">NIH</span><span class="term-title-col">Empirically-Supported Practices...</span></div>
+          <div class="term-why">↳ description match · award up to $7.5M · 36d</div>
+          <br>
+          <span class="term-summary">✓ Fetched 471 · Ranked 15 · Top score 4.0 · 1m 8s</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <p class="small">Made by a grant writer for grant writers. Questions: <a href="mailto:YOUR_EMAIL@example.com">YOUR_EMAIL@example.com</a>.</p>
-</main>
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-num">$3.2B</div>
+      <div class="stat-label">Grant management software market in 2026</div>
+    </div>
+    <div>
+      <div class="stat-num">48%</div>
+      <div class="stat-label">Of grant writers still track pipeline in spreadsheets</div>
+    </div>
+    <div>
+      <div class="stat-num">4×</div>
+      <div class="stat-label">Cheaper than Instrumentl starting price ($299/mo)</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-label">What's included</div>
+    <h2 class="section-title">Three commands. Full day covered.</h2>
+    <p class="section-sub">Everything a grant writer does daily — finding, structuring, and reusing — automated into slash commands.</p>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-cmd">/grants-scan</div>
+        <div class="feature-name">Morning Shortlist</div>
+        <p>Pulls every posted and forecasted opportunity from grants.gov, scores against your keywords, agencies, ALNs, and award-size window. Surfaces top 15 with deadline math and award sizes already done.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📄</div>
+        <div class="feature-cmd">/grants-draft &lt;url&gt;</div>
+        <div class="feature-name">RFP to Skeleton</div>
+        <p>Point at any RFP URL or PDF. Get a Markdown outline with every required section, the funder's exact heading text, word limits pulled verbatim, evaluation rubric, and attachments checklist.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📚</div>
+        <div class="feature-cmd">/grants-boilerplate</div>
+        <div class="feature-name">Boilerplate Vault</div>
+        <p>Indexes your past proposals locally. Retrieves the best matching section, rewrites in the funder's tone. Warns you before reusing the same paragraph for the same funder twice in 18 months.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section style="background:var(--bg)">
+  <div class="section-inner">
+    <div class="section-label">Daily workflow</div>
+    <h2 class="section-title">From Monday morning to submitted proposal</h2>
+    <div class="workflow">
+      <div class="workflow-step">
+        <div class="step-num">1</div>
+        <div class="step-title">Find opportunities</div>
+        <div class="step-desc">Ranked shortlist in your inbox every morning — not 200 irrelevant results.</div>
+        <div class="step-cmd">/grants-scan</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">2</div>
+        <div class="step-title">Structure the proposal</div>
+        <div class="step-desc">Paste the RFP link. Get back the exact skeleton the funder expects.</div>
+        <div class="step-cmd">/grants-draft &lt;url&gt;</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">3</div>
+        <div class="step-title">Write faster</div>
+        <div class="step-desc">Pull your best past sections, rewritten in the new funder's tone.</div>
+        <div class="step-cmd">/grants-boilerplate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="compare">
+  <div class="section-inner">
+    <div class="section-label">How we compare</div>
+    <h2 class="section-title">vs. Instrumentl and manual search</h2>
+    <p class="section-sub">Instrumentl is great if you need private foundation data. We're for federal-first writers who want a faster, cheaper, privacy-first workflow.</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="col-us col-us-head">Grant Writer Pack</th>
+          <th>Instrumentl</th>
+          <th>Manual (grants.gov)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Federal grant scanner</td>
+          <td class="col-us"><span class="check">✓</span> Ranked + filtered</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="partial">⚠</span> Manual scroll</td>
+        </tr>
+        <tr>
+          <td>Award size in results</td>
+          <td class="col-us"><span class="check">✓</span> Always shown</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td>RFP-to-skeleton drafter</td>
+          <td class="col-us"><span class="check">✓</span> Built in</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td>Boilerplate reuse vault</td>
+          <td class="col-us"><span class="check">✓</span> Local, private</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td>Private foundation data</td>
+          <td class="col-us"><span class="cross">✗</span> Roadmap</td>
+          <td><span class="check">✓</span> 490K+ funders</td>
+          <td><span class="cross">✗</span></td>
+        </tr>
+        <tr>
+          <td>Your proposals stay local</td>
+          <td class="col-us"><span class="check">✓</span> Never uploaded</td>
+          <td><span class="cross">✗</span> Cloud stored</td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Starting price</td>
+          <td class="col-us"><strong>$79/mo</strong> early bird</td>
+          <td>$299/mo</td>
+          <td>Free</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--bg)">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, honest pricing</h2>
+    <p class="section-sub">One won grant pays for years of subscription. Cancel anytime — no contracts, no data held hostage.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-was">&nbsp;</div>
+        <div class="price-amount">$0</div>
+        <p class="price-desc">Scanner only. Great for trying it out.</p>
+        <ul class="price-features">
+          <li>/grants-scan (daily scan)</li>
+          <li>Full ranking + award sizes</li>
+          <li>Notion sync</li>
+          <li>Open source on GitHub</li>
+        </ul>
+        <a href="https://github.com/stackmpire/grant-writer-pack" class="btn-plan btn-plan-secondary">Install free →</a>
+      </div>
+      <div class="price-card featured">
+        <div class="featured-badge">⚡ Early bird — 25 seats</div>
+        <div class="price-name">Solo</div>
+        <div class="price-was">$149/mo after</div>
+        <div class="price-amount">$79<span>/mo</span></div>
+        <p class="price-desc">Locked for life. Full toolkit.</p>
+        <ul class="price-features">
+          <li>Everything in Free</li>
+          <li>/grants-draft (RFP skeletons)</li>
+          <li>/grants-boilerplate (past wins)</li>
+          <li>Reuse tracking + warnings</li>
+          <li>Email support</li>
+        </ul>
+        <a href="checkout.html" class="btn-plan btn-plan-primary">Get early access →</a>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Firm</div>
+        <div class="price-was">&nbsp;</div>
+        <div class="price-amount">$349<span>/mo</span></div>
+        <p class="price-desc">For small grant consulting firms.</p>
+        <ul class="price-features">
+          <li>3 seats</li>
+          <li>Everything in Solo</li>
+          <li>Shared boilerplate vault</li>
+          <li>Priority email support</li>
+          <li>Annual = 2 months free</li>
+        </ul>
+        <a href="checkout.html" class="btn-plan btn-plan-secondary">Get started →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Common questions</h2>
+  </div>
+  <div class="faq">
+    <details>
+      <summary>Do I need to know how to code?</summary>
+      <div class="faq-body">No. You need Claude Code installed (free desktop app) and Python 3, which comes pre-installed on Mac. Setup takes about 5 minutes following the README. After that it's just typing slash commands — no code ever.</div>
+    </details>
+    <details>
+      <summary>Do my past proposals get uploaded anywhere?</summary>
+      <div class="faq-body">Never. The boilerplate vault stores and searches your proposals entirely on your local machine. Nothing is sent to any server. This is one of the core reasons to use a Claude Code plugin over a cloud SaaS — your client data stays yours.</div>
+    </details>
+    <details>
+      <summary>Does it cover foundation grants, not just federal?</summary>
+      <div class="faq-body">Version 1 is federal-only via grants.gov (which covers all US federal opportunities for free). Private foundation data from Candid/Instrumentl is on the roadmap but requires a paid data subscription. For federal-first writers, this covers the majority of opportunities.</div>
+    </details>
+    <details>
+      <summary>How is this different from Instrumentl?</summary>
+      <div class="faq-body">Instrumentl wins on private foundation data (490K+ funders). We win on price (4× cheaper), privacy (your proposals never leave your machine), and the RFP-to-skeleton drafter which Instrumentl doesn't offer. If you're federal-first and value data privacy, we're a better fit.</div>
+    </details>
+    <details>
+      <summary>What's the 30-day money-back guarantee?</summary>
+      <div class="faq-body">If the scanner doesn't surface at least one opportunity you hadn't already found in your first 30 days, reply to your welcome email and I'll refund you in full. No forms, no questions.</div>
+    </details>
+    <details>
+      <summary>Can I cancel anytime?</summary>
+      <div class="faq-body">Yes. Reply "cancel" to any email and I'll stop the subscription the same day. No retention flows, no cancellation surveys. Your data stays on your machine regardless.</div>
+    </details>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section style="background:var(--green); text-align:center; padding:4rem 1.5rem;">
+  <h2 style="color:#fff;font-size:2rem;letter-spacing:-0.02em;margin-bottom:0.8rem;">Ready to stop scrolling?</h2>
+  <p style="color:rgba(255,255,255,.8);margin-bottom:2rem;font-size:1.05rem;">25 early-bird seats at $79/mo for life. Install the scanner free today.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="checkout.html" style="background:#fff;color:var(--green);padding:.9rem 1.8rem;border-radius:8px;font-weight:700;text-decoration:none;font-size:1rem;">Get early access — $79/mo →</a>
+    <a href="https://github.com/stackmpire/grant-writer-pack" style="background:rgba(255,255,255,.15);color:#fff;padding:.9rem 1.8rem;border-radius:8px;font-weight:600;text-decoration:none;font-size:1rem;border:1px solid rgba(255,255,255,.3);">Install free on GitHub</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">GrantWriterPack</div>
+      <div style="margin-top:.4rem">Made for grant writers, by a grant writer.</div>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/stackmpire/grant-writer-pack">GitHub</a>
+      <a href="checkout.html">Pricing</a>
+      <a href="mailto:fawazmpire@gmail.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
