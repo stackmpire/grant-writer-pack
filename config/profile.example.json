@@ -1,0 +1,26 @@
+{
+  "_comment": "Copy to config/profile.json and edit. All fields optional except keywords.",
+
+  "keywords": ["youth mental health", "after school", "rural broadband"],
+  "exclude_keywords": ["research", "fellowship"],
+
+  "preferred_agencies": ["HHS", "ED", "USDA"],
+  "preferred_alns": ["93.243", "84.287"],
+
+  "oppStatuses": "forecasted|posted",
+  "fundingCategories": "",
+  "eligibilities": "",
+
+  "min_days_until_deadline": 14,
+  "max_days_until_deadline": 180,
+  "min_award_amount": 25000,
+  "max_award_amount": 5000000,
+  "min_score": 1,
+  "rows": 200,
+  "enrich_top_k": 50,
+
+  "notion": {
+    "enabled": false,
+    "database_id": "PASTE_NOTION_DATABASE_ID_HERE"
+  }
+}

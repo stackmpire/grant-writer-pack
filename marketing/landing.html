@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grant Writer Pack — daily grants.gov scan, ranked for your niche</title>
+  <meta name="description" content="A Claude Code plugin for solo grant writers. Daily grants.gov eligibility scan ranked to your niche, RFP-to-skeleton drafting, and a boilerplate vault that tracks reuse across funders.">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #555;
+      --line: #e5e5e5;
+      --accent: #0a4d2e;
+      --bg: #fafaf7;
+      --card: #fff;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font: 17px/1.55 ui-serif, Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background: var(--bg);
+      padding: 0 1.2rem;
+    }
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 4rem 0 6rem;
+    }
+    h1 {
+      font-size: 2.3rem;
+      line-height: 1.15;
+      margin: 0 0 0.4rem;
+      letter-spacing: -0.01em;
+    }
+    h2 {
+      font-size: 1.3rem;
+      margin: 2.6rem 0 0.6rem;
+      letter-spacing: -0.005em;
+    }
+    .lede {
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin: 0 0 2rem;
+    }
+    p, li { color: var(--ink); }
+    ul { padding-left: 1.2rem; }
+    li { margin: 0.3rem 0; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.92em;
+    }
+    pre {
+      background: #f0efe8;
+      padding: 0.9rem 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 1.1rem 1.3rem;
+      margin: 1rem 0;
+    }
+    .card h3 {
+      margin: 0 0 0.4rem;
+      font-size: 1.05rem;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+    .pricing {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .price {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 1.1rem 1.2rem;
+      background: var(--card);
+    }
+    .price .amount {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0.2rem 0 0.1rem;
+    }
+    .price .per {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .cta {
+      display: inline-block;
+      margin: 1.6rem 0 0;
+      padding: 0.7rem 1.2rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .cta:hover { background: #073a22; }
+    .small { font-size: 0.92em; color: var(--muted); }
+    .strike { text-decoration: line-through; color: #999; }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 2.4rem 0; }
+    @media (max-width: 540px) {
+      .pricing { grid-template-columns: 1fr; }
+      h1 { font-size: 1.9rem; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>The grant scanner you wish you had on Monday morning.</h1>
+  <p class="lede">A Claude Code plugin for solo grant writers. Daily grants.gov scan, ranked to your niche, with the deadline math and award sizes already done. Plus an RFP-to-draft skeleton and a boilerplate vault that warns you before you reuse a paragraph for the same funder twice.</p>
+
+  <a class="cta" href="checkout.html">Get early access — $79/mo</a>
+  <p class="small">First 25 writers locked at $79/mo for life (regular $149/mo). Instant access. 30-day money-back guarantee.</p>
+  <p class="small" style="margin-top:0.3rem">Not ready to buy? <a href="https://github.com/YOUR_USERNAME/grant-writer-pack">Install the scanner free</a> — no card required.</p>
+
+  <h2>What it does</h2>
+
+  <div class="card">
+    <h3>/grants-scan — your morning shortlist</h3>
+    <p>Pulls every <code>posted</code> and <code>forecasted</code> opportunity from grants.gov, scores each one against your keywords, preferred agencies, ALNs, and award-size window, then surfaces the top 15 with a one-line "why this fits" and the deadline math already done.</p>
+  </div>
+
+  <div class="card">
+    <h3>/grants-draft — RFP to skeleton in 30 seconds</h3>
+    <p>Point it at an RFP URL or PDF. Get back a Markdown outline with every required section as an H2, the funder's exact heading text, word/page limits pulled verbatim, the evaluation rubric, and the attachments checklist. You bring the substance.</p>
+  </div>
+
+  <div class="card">
+    <h3>/grants-boilerplate — past wins, not paste-jobs</h3>
+    <p>Drop your past proposals into a folder. Ask for "org capacity for HRSA" — get the three most relevant past versions, rewritten in the funder's tone. Every reuse is logged so you get a warning before sending the same paragraph to the same funder twice in 18 months.</p>
+  </div>
+
+  <h2>Why a Claude Code plugin instead of a SaaS</h2>
+  <ul>
+    <li><strong>Your past proposals never leave your machine.</strong> No SOC 2 questions from your nonprofit clients.</li>
+    <li><strong>No per-seat tax.</strong> Your team uses Claude Code already; this just sits on top.</li>
+    <li><strong>Hackable.</strong> Profile is one JSON file. Add a state portal, swap the ranker, or pipe results into your own CRM. The whole thing is ~300 lines of Python.</li>
+  </ul>
+
+  <h2>What it's not</h2>
+  <ul>
+    <li>Not Instrumentl. No private foundation data — grants.gov only in v1, with state portals and Candid integration on the roadmap.</li>
+    <li>Not a writer. The skeletons and rewrites are scaffolds; you bring the substance and the judgment. That's the whole point.</li>
+    <li>Not a CRM. It dumps results to a Notion database if you want; otherwise it's a Markdown shop.</li>
+  </ul>
+
+  <h2>Pricing</h2>
+  <div class="pricing">
+    <div class="price">
+      <div>Solo</div>
+      <div class="amount">$149<span class="per">/mo</span></div>
+      <div class="small">1 seat. All three commands. Unlimited scans. Cancel anytime.</div>
+    </div>
+    <div class="price">
+      <div>Firm</div>
+      <div class="amount">$349<span class="per">/mo</span></div>
+      <div class="small">3 seats. Shared boilerplate vault. Priority email support.</div>
+    </div>
+  </div>
+  <p class="small" style="margin-top:1rem;">Annual plans get 2 months free. <span class="strike">$149/mo</span> <strong>$79/mo for life</strong> for the first 25 customers.</p>
+
+  <hr>
+
+  <p class="small">Made by a grant writer for grant writers. Questions: <a href="mailto:YOUR_EMAIL@example.com">YOUR_EMAIL@example.com</a>.</p>
+</main>
+</body>
+</html>

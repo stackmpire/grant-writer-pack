@@ -1,0 +1,26 @@
+Subject: One thing most grant writers miss in grants.gov
+
+Hi {FIRST_NAME},
+
+Quick tip from week one:
+
+The grants.gov search2 API returns `forecasted` opportunities — not just `posted` ones.
+Most writers don't see these because the website buries them.
+
+Your /grants-scan already pulls them (the profile.json default includes `"forecasted|posted"`).
+Forecasted ops are worth tracking because:
+- You have months of lead time instead of weeks
+- The funder is often open to pre-submission contact at this stage
+- You can start a draft skeleton now before the competition
+
+Try this in your profile.json:
+   "max_days_until_deadline": 365
+
+That'll surface forecasted ops with a close date up to a year out.
+Re-run /grants-scan and look for `"status": "forecasted"` in the results.
+
+{SENDER_NAME}
+
+---
+Have a question or request? Hit reply. I'm one person building this, so feedback
+from the first 25 customers directly shapes the roadmap.

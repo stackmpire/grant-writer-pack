@@ -1,0 +1,49 @@
+Subject: Your Grant Writer Pack license key — {KEY}
+
+Hi {FIRST_NAME},
+
+Thanks for subscribing ({PLAN_LABEL} — {SEATS}, {PRICE}).
+
+Your license key:
+
+    {KEY}
+
+---
+
+INSTALL (3 minutes)
+
+1. Clone:
+   git clone https://github.com/YOUR_USERNAME/grant-writer-pack.git
+   cd grant-writer-pack
+
+2. Configure your profile:
+   cp config/profile.example.json config/profile.json
+   # Open config/profile.json and fill in:
+   #   "keywords"           — e.g. ["youth mental health", "workforce development"]
+   #   "preferred_agencies" — e.g. ["HHS", "ED", "DOL"]
+   #   "preferred_alns"     — e.g. ["93.243", "84.287"]
+
+3. Open in Claude Code and scan:
+   claude .
+   /grants-scan
+
+That's it. Your first shortlist runs in about 30 seconds.
+
+---
+
+THREE THINGS TO DO IN THE FIRST 10 MINUTES
+
+1. Tune config/profile.json so the results match your niche.
+   Re-run /grants-scan — it pulls live from grants.gov every time.
+
+2. Drop 2–3 past proposals into the boilerplate/ folder as .txt or .md.
+   /grants-boilerplate needs something to pull from.
+
+3. Try /grants-draft on the URL of the next RFP you're looking at.
+   Point it at any grants.gov opportunity detail page.
+
+---
+
+Questions? Reply to this email — I read and respond to every one.
+
+{SENDER_NAME}

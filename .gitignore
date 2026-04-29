@@ -1,0 +1,13 @@
+data/*.json
+data/licenses.db
+config/profile.json
+boilerplate/*.md
+boilerplate/*.txt
+boilerplate/.reuse-log.jsonl
+!boilerplate/sample-*.md
+drafts/
+.DS_Store
+__pycache__/
+*.pyc
+.env
+.env.local

@@ -1,0 +1,18 @@
+Subject: Did the scan run? (quick check-in)
+
+Hi {FIRST_NAME},
+
+Three days in — did /grants-scan run successfully?
+
+The most common issue is a profile.json that's too narrow (no results) or
+too broad (too many low-score results). Either one is a quick fix.
+
+If the shortlist looks right — great. The next unlock is the boilerplate vault.
+Drop 2–3 past proposals into the boilerplate/ folder and try:
+
+   /grants-boilerplate org capacity for [your next funder]
+
+If anything errored or the results look wrong, reply with a screenshot of the
+output and I'll fix it today.
+
+{SENDER_NAME}
